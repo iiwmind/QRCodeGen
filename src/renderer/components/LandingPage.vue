@@ -142,6 +142,17 @@
               </el-input-number>
             </el-form-item>
 
+            <el-form-item label="每行数量">
+              <el-input-number
+                placeholder=""
+                v-model.number="colCount"
+                size="mini"
+                :step="1"
+                :min="1" :max="10"
+                >
+              </el-input-number>
+            </el-form-item>
+
             <el-form-item>
               <div
                 id="upload-area"
@@ -180,18 +191,29 @@
 
       <div class="right-side">
         <div class="doc" id="doc">
-          <div class="title">二维码</div>
+          <!-- <div class="title">二维码</div> -->
 
-          <div v-if="size>=30 && size<=1000" class="qr-area">
-            <div v-for="(n,index) in lastNoAry.length" class="qr-item">
-              <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' }">{{mainTitle}}</div>
-              <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' }" >{{subTitle}}</div>
-              <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[index]" :size="size" :margin="0"></vue-qr>
-              <span v-bind:style="{ fontSize: valueFontSize + 'px' }">{{valuePrefix + '-' + valueMid + '-' + lastNoAry[index]}}</span>
-            </div>
-          </div>
+          <!-- <span v-if="size>=30 && size<=1000" class="qr-area"> -->
+
+          <!-- {{rowCount}} -->
+          <table class="table" v-if="rowCount">
+            <tr v-for="rIndex in rowCount" class="qr-item" :key="rIndex">
+              <!-- <td v-for="(n,index) in lastNoAry.length" class="qr-item"> -->
+              <td v-for="cIndex in colCount" class="qr-item" :key="(rIndex-1) + '-' + (cIndex-1)">
+                <!-- {{(rIndex-1) + '-' + (cIndex-1)}} -->
+                <div v-if="lastNoAry[(rIndex-1)*colCount + (cIndex-1)]">
+                  <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' }">{{mainTitle}}</div>
+                  <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' }" >{{subTitle}}</div>
+                  <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[(rIndex-1)*colCount + (cIndex-1)]" :size="size" :margin="0"></vue-qr>
+                  <span v-bind:style="{ fontSize: valueFontSize + 'px' }">{{valuePrefix + '-' + valueMid + '-' + lastNoAry[(rIndex-1)*colCount + (cIndex-1)]}}</span>
+                </div>
+              </td>
+            </tr>
+          </table>
           
-          <span v-else>请填写二维码参数</span>
+          <!-- </div> -->
+          
+          <!-- <span v-else>请填写二维码参数</span> -->
 
 
         </div>
@@ -238,7 +260,8 @@ export default {
 
       uploadLogo: null,
 
-      lastNoAry: []
+      lastNoAry: [],
+      colCount: 5
     }
   },
   components: { VueQr },
@@ -267,12 +290,23 @@ export default {
     //   console.log(this.lastAry)
     //   return [1, 2, 3]
     // },
+
+    // colCount: function () {
+    //   return 5
+    // },
     tips: function () {
       let sumNum = this.valueLast + this.count
       if (String(sumNum).length > this.valueLastWidth) {
         return '起始数和数量的总和不能超过9999'
       }
       return ''
+    },
+    rowCount: function () {
+      console.log(this.count % this.colCount)
+      if (this.count % this.colCount === 0) {
+        return parseInt(this.count / this.colCount)
+      }
+      return parseInt(this.count / this.colCount) + 1
     }
   },
   created () {
@@ -295,6 +329,7 @@ export default {
   methods: {
     getLastNoAry () {
       this.lastNoAry = _.range(this.valueLast, this.valueLast + this.count).map(i => _.padStart(i, this.valueLastWidth, '0'))
+      console.log(this.lastNoAry)
     },
     randomText () {
       let midNoAry = _.range(1000).map(i => _.padStart(i, 3, '0'))
@@ -401,6 +436,17 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
+tr {
+  display: block;
+}
+table {
+  page-break-inside: avoid;
+}
+/* @media print {
+  #qr-table {
+    page-break-before: always;
+  }
+} */
 .whiteTitle {
   font-size: 4vw;
 }
@@ -459,7 +505,7 @@ main > div {
   flex: 1;
 }
 .right-side {
-  flex: 4;
+  /* flex: 4; */
   text-align: center;
 }
 
@@ -471,10 +517,10 @@ main > div {
 }
 
 .doc {
-  margin-left: 20px;
+  /* margin-left: 20px; */
   /* background: #1d1c1c; */
   background: #fff;
-  min-height: 423px;
+  min-height: 410px;
 }
 
 .fake-title-bar {
