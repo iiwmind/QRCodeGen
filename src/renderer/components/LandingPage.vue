@@ -120,7 +120,7 @@
             </el-input>
             </el-form-item> -->
 
-            
+            <el-row>
             <el-form-item label="数量">
             <el-input-number
               placeholder="请输入数量"
@@ -131,7 +131,7 @@
             </el-input-number>
             </el-form-item>
 
-            <el-form-item label="大小">
+            <el-form-item label="*qr大小">
               <el-input-number
                 placeholder=""
                 v-model.number="size"
@@ -174,8 +174,29 @@
             <!-- <el-button  size="mini" type="primary" round @click="printContent2">打印</el-button> -->
             <el-button  size="mini" type="primary" round @click="printContent">打印预览</el-button>
             </el-form-item>
-
+</el-row>
             
+
+            <el-form-item label="*图片宽">
+              <el-input-number
+                placeholder=""
+                v-model.number="tdWeight"
+                size="mini"
+                :step="5"
+                :min="30" :max="1000"
+                >
+              </el-input-number>
+            </el-form-item>
+            <el-form-item label="*图片高">
+              <el-input-number
+                placeholder=""
+                v-model.number="tdHeight"
+                size="mini"
+                :step="5"
+                :min="30" :max="1000"
+                >
+              </el-input-number>
+            </el-form-item>
 
            </el-form>
 
@@ -202,10 +223,13 @@
               <td v-for="cIndex in colCount"  :key="(rIndex-1) + '-' + (cIndex-1)">
                 <!-- {{(rIndex-1) + '-' + (cIndex-1)}} -->
                 <div v-if="lastNoAry[(rIndex-1)*colCount + (cIndex-1)]">
-                  <div class="td-qr-item">
-                    <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' }">{{mainTitle}}</div>
-                    <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' }" >{{subTitle}}</div>
-                    <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[(rIndex-1)*colCount + (cIndex-1)]" :size="size" :margin="0"></vue-qr>
+                  <!-- <div class="td-qr-item" v-bind:style="{ background-image: url('~@/assets/qrbackground.jpg'); background-size: 100% 100%;, fontSize: mainTitleFontSize + 'px' }"> -->
+                  <div class="td-qr-item" v-bind:style="{ height: tdHeight+'px', width:tdWeight+'px' }">
+                    <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' , width:size+'px'}">{{mainTitle}}</div>
+                    <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' , width:size+'px'}" >{{subTitle}}</div>
+                    <div v-bind:style="{ height: size+'px', width:size+'px' }">
+                      <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[(rIndex-1)*colCount + (cIndex-1)]" :size="size" :margin="0"></vue-qr>
+                    </div>
                     <span v-bind:style="{ fontSize: valueFontSize + 'px' }">{{valuePrefix + '-' + valueMid + '-' + lastNoAry[(rIndex-1)*colCount + (cIndex-1)]}}</span>
                   </div>
                 </div>
@@ -247,12 +271,13 @@ export default {
       imagePath: require('../assets/test2.png'),
       filter: 'color',
       footValue: '哇咔咔',
-      size: 150,
+      size: 130,
       count: 1,
-      mainTitle: 'FEDERAL MINISTRY OF TRANSPORT ATION',
+      mainTitle: 'FEDERAL MINISTRY',
+      // OF TRANSPORT ATION',
       subTitle: 'ROAD CRIME CONTROL SYSTEM',
-      mainTitleFontSize: 150 / 17,
-      subTitleFontSize: 150 / 17,
+      mainTitleFontSize: 130 / 13,
+      subTitleFontSize: 130 / 14,
 
       valuePrefix: '内容一',
       valueMid: '内容二',
@@ -263,7 +288,10 @@ export default {
       uploadLogo: null,
 
       lastNoAry: [],
-      colCount: 5
+      colCount: 5,
+
+      tdHeight: 285,
+      tdWeight: 215
     }
   },
   components: { VueQr },
@@ -470,8 +498,8 @@ table {
 }
 
 .td-qr-item {
-  margin: 0.5%;
-  padding: 10.5% 15% 12% 15%;
+  /* margin: 0.5%; */
+  padding: 42.5% 19% 7% 19%;
   background: #fff;
   background-image: url('~@/assets/qrbackground.jpg');
   background-size: 100% 100%;
