@@ -199,13 +199,15 @@
           <table class="table" v-if="rowCount">
             <tr v-for="rIndex in rowCount" class="qr-item" :key="rIndex">
               <!-- <td v-for="(n,index) in lastNoAry.length" class="qr-item"> -->
-              <td v-for="cIndex in colCount" class="qr-item" :key="(rIndex-1) + '-' + (cIndex-1)">
+              <td v-for="cIndex in colCount"  :key="(rIndex-1) + '-' + (cIndex-1)">
                 <!-- {{(rIndex-1) + '-' + (cIndex-1)}} -->
                 <div v-if="lastNoAry[(rIndex-1)*colCount + (cIndex-1)]">
-                  <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' }">{{mainTitle}}</div>
-                  <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' }" >{{subTitle}}</div>
-                  <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[(rIndex-1)*colCount + (cIndex-1)]" :size="size" :margin="0"></vue-qr>
-                  <span v-bind:style="{ fontSize: valueFontSize + 'px' }">{{valuePrefix + '-' + valueMid + '-' + lastNoAry[(rIndex-1)*colCount + (cIndex-1)]}}</span>
+                  <div class="td-qr-item">
+                    <div v-bind:style="{ color: mainTitleColor, fontSize: mainTitleFontSize + 'px' }">{{mainTitle}}</div>
+                    <div  v-bind:style="{ color: subTitleColor, fontSize: subTitleFontSize + 'px' }" >{{subTitle}}</div>
+                    <vue-qr  :logoSrc="uploadLogo?uploadLogo:imagePath" :text="valuePrefix + '-' + valueMid+'-'+lastNoAry[(rIndex-1)*colCount + (cIndex-1)]" :size="size" :margin="0"></vue-qr>
+                    <span v-bind:style="{ fontSize: valueFontSize + 'px' }">{{valuePrefix + '-' + valueMid + '-' + lastNoAry[(rIndex-1)*colCount + (cIndex-1)]}}</span>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -461,9 +463,19 @@ table {
   margin: 0.5%;
   padding: 0.5%;
   background: #fff;
-  /* background-image: url('~@/assets/logo.png'); */
+  /* background-image: url('~@/assets/qrbackground.jpg'); */
   /* background-size: 100% 100%; */
   /* background-repeat: no-repeat; */
+  box-sizing: border-box;
+}
+
+.td-qr-item {
+  margin: 0.5%;
+  padding: 10.5% 15% 12% 15%;
+  background: #fff;
+  background-image: url('~@/assets/qrbackground.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   box-sizing: border-box;
 }
 
