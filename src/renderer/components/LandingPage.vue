@@ -217,7 +217,7 @@
           <!-- <span v-if="size>=30 && size<=1000" class="qr-area"> -->
 
           <!-- {{rowCount}} -->
-          <table class="table" v-if="rowCount">
+          <table id="qrTable" class="table" v-if="rowCount">
             <tr v-for="rIndex in rowCount" class="qr-item" :key="rIndex">
               <!-- <td v-for="(n,index) in lastNoAry.length" class="qr-item"> -->
               <td v-for="cIndex in colCount"  :key="(rIndex-1) + '-' + (cIndex-1)">
@@ -332,7 +332,7 @@ export default {
       return ''
     },
     rowCount: function () {
-      console.log(this.count % this.colCount)
+      // console.log(this.count % this.colCount)
       if (this.count % this.colCount === 0) {
         return parseInt(this.count / this.colCount)
       }
@@ -359,7 +359,7 @@ export default {
   methods: {
     getLastNoAry () {
       this.lastNoAry = _.range(this.valueLast, this.valueLast + this.count).map(i => _.padStart(i, this.valueLastWidth, '0'))
-      console.log(this.lastNoAry)
+      // consoleconsole.log(this.lastNoAry)
     },
     randomText () {
       let midNoAry = _.range(1000).map(i => _.padStart(i, 3, '0'))
@@ -399,10 +399,15 @@ export default {
       // range.selectNode(target)
       // selection.addRange(range)
 
+      // let tableWidth = document.getElementById('qrTable')
+      // console.log('tableWidth: ', tableWidth, tableWidth.clientWidth)
+      let tdWidth = document.getElementsByTagName('td')[0].clientWidth
+      let rowWidth = tdWidth * this.colCount
+      // console.log('tdWidth: ', tdWidth, rowWidth)
       this.printNoStart = false
       setTimeout(() => {
         // console.log('xxx')
-        this.$electron.ipcRenderer.send('printToPdf')
+        this.$electron.ipcRenderer.send('printToPdf', rowWidth)
         setTimeout(() => {
           this.printNoStart = true
         }, 1000)
@@ -469,14 +474,14 @@ body {
 tr {
   display: block;
 }
-table {
+/* table {
   page-break-inside: avoid;
-}
-/* @media print {
+} */
+@media print {
   #qr-table {
     page-break-before: always;
   }
-} */
+} 
 .whiteTitle {
   font-size: 4vw;
 }
@@ -561,6 +566,8 @@ main > div {
   /* background: #1d1c1c; */
   background: #fff;
   min-height: 410px;
+  width: 1124px;
+  overflow: hidden;
 }
 
 .fake-title-bar {

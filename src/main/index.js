@@ -29,7 +29,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 700,
     useContentSize: true,
-    width: 1000,
+    width: 1145,
     title: '二维码生成工具',
     // titleBarStyle: 'hiddenInset'
     // frame: false
@@ -58,14 +58,15 @@ ipcMain.on('printTox', event => {
   mainWindow.webContents.print({ silent: false, printBackground: false })
 })
 
-ipcMain.on('printToPdf', event => {
-  // console.log('printToPdf')
+ipcMain.on('printToPdf', (event, rowWidth) => {
+  console.log('printToPdf')
+  console.log(rowWidth)
   const pdfPath = path.join(os.tmpdir(), 'printxx.pdf')
   // const win = BrowserWindow.fromWebContents(event.sender)
   // Use default printing options
   mainWindow.webContents.printToPDF(
     {
-      pageSize: 'A3',
+      pageSize: 'A4',
       printSelectionOnly: false,
       printBackground: true,
       landscape: false
